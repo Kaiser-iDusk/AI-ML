@@ -7,110 +7,117 @@ typedef long long ll;
 typedef long double ld;
 
 class Dense{
-    //code here
-    int ID;
-    int units, preInputs = 1, Outputs = 1;
-    ndArray<double>* input;
-    ndArray<double>* data;
-    vector<ndArray> weights;
-    ndArray<double>* bias;
-    int* child;
-    bool setActivaion;
+    int id;
+    vector<double>* input;
+    vector<double>* data;
+    
+    vector<vector<double>> weights;
+    vector<double>* bias;
 
-    double sigmoid(double inp){
-        return (1 / (1 + exp(-inp)));
-    }
+    int nInputs, nUnits, nOutputs;
+    bool setActivation;
 
-    double ReLU(double inp){
-        return max(0, inp);
-    }
-
-    ndArray<ndArray<double>> const& get_weights(){
-        ndArray<ndArray<double>(preInputs)> wts(units);
-        for(int i = 0; i< units; i++){
-            ndArray<double> temp(preInputs);
-            for(int j = 0; j< preInputs; j++){
-                temp.push(weights[i].At(j));
-            }
-            wts.push(temp);
+    vector<double> sigmoid(vector<double>& v){
+        vector<double> ans;
+        for(int i = 0; i< v.size(); i++){
+            double z = (1 / (1 + std::exp(-v[i])));
+            ans.push_back(z);
         }
-        return &wts;
-    } 
+        return ans;
+    }
+
+    vector<double> ReLU(vector<double>& v){
+        vector<double> ans;
+        for(int i = 0; i< v.size(); i++){
+            double z = max(0, v[i]);
+            ans.push_back(z);
+        }
+        return ans;
+    }
+
+    double dot(vector<double>& v1, vector<double>& v2) const{
+        if(v1.size() != v2.size()){
+            cout << "Error: Dimensions not same." << endl;
+            return 0.0;
+        }
+        double ans = 0;
+        for(int i = 0; i< v1.size(); i++){
+            ans += (v1[i] * v2[i]);
+        }
+        return ans;
+    }
 
 public:
     Dense(int units, string activation){
-        this->units = units;
-        bias = new ndArray(units);
-
         srand(time(0));
-        for(int i = 0; i< units; i++){
-            bias->setAt(0.0, i);
-            ndArray a(preInputs);
-            for(int j = 0; j< preInputs; j++){
-                double z = (double)(rand() % 1e3);
-                a.push(z);
-            }
-            weights.push_back(a);
-        }
+        nUnits = units;
 
+        bias = new vector<double>(units, 0.0);
+        data = new vector<double>(units, 0.0);
         if(activation == "sigmoid"){
-            setActivaion = true;
+            setActivation = true;
         }
-        else if(activation == "ReLU"){
-            setActivaion = false;
+        else{
+            setActivation = false;
         }
     }
-
-    void setInputs(int num){
-        preInputs = num;
-        input = new ndArray<double>(preInputs);
-    }
-
-    void process(){
-        data = new ndArray<double>(units);
+    void setInputs(vector<double>* v){
+        nInputs = v->size();
         for(int i = 0; i< units; i++){
-            data->push(ndArray::dot(v[i], *input));
-        }
-        (*data) = (*data) + (*bias);
-        if(setActivaion){
-            for(int i = 0; i< units; i++){
-                data->setAt(sigmoid(data->At(i)), i);
+            vector<double> temp(nInputs);
+            for(int j = 0; j< nInputs; j++){
+                temp[j] = (double) rand();
             }
-            return;
-        }else{
-            for(int i = 0; i< units; i++){
-                data->setAt(ReLU(data->At(i)), i);
-            }
-            return;
+            weights.push_back(temp);
         }
+        input = v;
     }
     
-    void disp_weights(){
-        ndArray<ndArray<double>(preInputs)> wts(units) = get_weights();
+    void show_weights(){
+        cout << "([ ";
         for(int i = 0; i< units; i++){
-            ndArray<double> temp = wts.At(i);
-
-            cout << "unit " << i+1 << " : ";
-            for(int j = 0; j< preInputs; j++){
-                cout << temp.At(j) << " ";
+            for(int j = 0; j< nInputs; j++){
+                cout << weights[i] << " ";
             }
             cout << endl;
         }
+        cout << " ], etype = weights, dtype = double)" << endl;
     }
 
-    int getId(){
-        return ID;
+    void show_bias(){
+        cout << "([ ";
+        for(int i = 0; i< units; i++){
+            cout << bias->at(i) << " ";
+        }
+        cout << " ], etype = bias, dtype = double)" << endl;
     }
-    void setId(int x){
-        ID = x;
-        return;
+
+    int getID(){
+        return id;
     }
-    ndArray<double> getOutput(){
-        if(Outputs==1){
-            
+    void setID(int x){
+        id = x;
+    }
+};
+
+class Sequential{
+    int layers;
+    vector<Dense*> v;
+    Input* inpL;
+
+public:
+    Sequential(vector<Dense*>& v){
+        layers = v.size();
+        
+        else{
+            cout << "Error: Sequential with 0 layers not valid." << endl;
         }
     }
 };
+
+class Input(Dense){
+
+}
  
 int main(){
     //complete main here
