@@ -63,12 +63,22 @@ public:
         pos++;
         return;
     }
+
     T At(int index) const{
         if(index >= pos){
             return 0.0;
         }
         return arr[index];
     }
+    void setAt(T data, int index){
+        if(index >= pos){
+            cout << "Error: Index out of Bounds." << endl;
+            return;
+        }
+        arr[index] = data;
+        return;
+    }
+
     void print(){
         for(int i = 0; i< pos; i++){
             cout << arr[i] << " ";
