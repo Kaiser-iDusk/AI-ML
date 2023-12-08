@@ -1,12 +1,20 @@
 #include<bits/stdc++.h>
+#include<ctime>
 #include "numPy.cpp"
 using namespace std;
 
 typedef long long ll;
 typedef long double ld;
 
-class Perceptron{
+class Dense{
     //code here
+    int units, preInputs = 1, Outputs = 1;
+    double input, data, output;
+    vector<ndArray> weights;
+    ndArray* bias;
+    int* child;
+    bool setActivaion;
+
     double sigmoid(double inp){
         return (1 / (1 + exp(-inp)));
     }
@@ -15,40 +23,35 @@ class Perceptron{
         return max(0, inp);
     }
 
-    double
-
 public:
-    int units;
-    int swt = 0;
-    int* child;
-    double data;
-    double* weights;
-    double* bias;
-
-    Perceptron(int units, string activation){
-        srand();
+    Dense(int units, string activation){
         this->units = units;
-        bias = new double[units];
-        weights = new double[units];
+        bias = new ndArray(units);
 
+        srand(time(0));
         for(int i = 0; i< units; i++){
-            bias[i] = 0.0;
-            weights[i] = (double)(rand() % 1e6);
-        } 
-
-        if(activation == "ReLU"){
-            swt = 0;
+            bias[i] = rand();
+            ndArray a(preInputs);
+            for(int j = 0; j< preInputs; j++){
+                double z = (double)(rand() % 1e3);
+                a.push(z);
+            }
+            weights.push_back(a);
         }
-        else if(activation == "sigmoid"){
-            swt = 1;
+
+        if(activation == "sigmoid"){
+            setActivaion = true;
+        }
+        else if(activation == "ReLU"){
+            setActivaion = false;
         }
     }
 
-    double process(double val){
-        if(swt == 0){
-
-        }
+    void setInputs(int num){
+        preInputs = num;
     }
+
+    
 };
  
 int main(){

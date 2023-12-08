@@ -2,31 +2,51 @@
 #pragma GCC diagnostic ignored "-Wconversion-null"
 using namespace std;
 
+template<typename T>
 class ndArray {
     //code here
     int bitSize;
     int pos;
-    double* arr;
+    T* arr;
 
 public:
-
+    // Constructor
     ndArray(int sz){
         bitSize = sz;
         pos = 0;
-        arr = new double[sz];
+        arr = new T[sz];
         for(int i = 0; i< sz; i++){
             arr[i] = 0.0;
         }
     }
+
+    // Deep Copy Constructor
     ndArray(ndArray const &a){
         bitSize = a.size();
-        arr = new double[bitSize];
+        arr = new T[bitSize];
         for(int i = 0; i< a.length(); i++){
             arr[i] = a.At(i);
             pos++;
         }    
     }
+    ndArray(vector<T> const &v){
+        bitSize = v.size();
+        arr = new T[bitSize];
+        for(int i = 0; i< bitSize; i++){
+            arr[i] = v[i];
+            pos++;
+        }
+    }
+    ndArray(const T v[], int N){
+        bitSize = N;
+        arr = new T[bitSize];
+        for(int i = 0; i< bitSize; i++){
+            arr[i] = v[i];
+            pos++;
+        }
+    }
 
+    // Util Functions
     int size() const{
         return bitSize;
     }
@@ -35,7 +55,7 @@ public:
         return pos;
     }
 
-    void push(double x){
+    void push(T x){
         if(pos >= bitSize){
             return;
         }
@@ -43,7 +63,7 @@ public:
         pos++;
         return;
     }
-    double At(int index) const{
+    T At(int index) const{
         if(index >= pos){
             return 0.0;
         }
@@ -55,7 +75,7 @@ public:
         }
         cout << endl;
     }
-    static dot(ndArray const& a1, ndArray const& a2){
+    static double dot(ndArray<double> const& a1, ndArray<double> const& a2){
         if(a1.length() != a2.length()){
             cout << "Error: Dimensions not matching." << endl;
             return 0.0;
@@ -66,8 +86,10 @@ public:
         }
         return ans;
     }
-    ndArray& operator+(ndArray const& a){
-        ndArray* ans = new ndArray(a.size());
+
+    // Overloaded operators
+    ndArray<double>& operator+(ndArray<double> const& a){
+        ndArray<double>* ans = new ndArray<double>(a.size());
         if(this->bitSize != a.size()){
             cout << "Error: Invalid dimensions." << endl;
             return *ans;
@@ -78,8 +100,8 @@ public:
         }
         return *ans;
     }
-    ndArray& operator-(ndArray const& a){
-        ndArray* ans = new ndArray(a.size());
+    ndArray<double>& operator-(ndArray<double> const& a){
+        ndArray<double>* ans = new ndArray<double>(a.size());
         if(this->bitSize != a.size()){
             cout << "Error: Invalid dimensions." << endl;
             return *ans;
