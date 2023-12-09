@@ -88,7 +88,6 @@ public:
         for(int i = 0; i< nUnits; i++){
             //cout << "Dot product " << (i+1) << " time." << endl;
             ans[i] = dot(inputs, weights->at(i)) + bias->at(i);
-            //cout << "Answer of dot product: " << ans[i];
             data->at(i) = ans[i];
         }
         if(activation){
@@ -140,12 +139,8 @@ public:
         nInputs = Inputs; 
         v = dense;
         
-        //step 0
-        //cout << "Check 0 done" << endl;
         Dense* init = dense[0];
         
-        // step 1
-        //cout << "Check 1 done" << endl;
         init->setVals(Inputs);
 
         for(int i = 1; i< n; i++){
@@ -154,21 +149,13 @@ public:
             Dense* temp = dense[i];
             Dense* prev = dense[i-1];
             
-            // step 2
-            //cout << "Check 2 done" << endl;
             pair<int, int> p = prev->getInfo();
-            //cout << "Layer " << (i) << " units: " << p.second << " and inputs: " << p.first << endl; 
-            
-            //step 1
-            //cout << "Check 1 done" << endl;
             temp->setVals(p.second);
         }
 
         init = dense[n-1];
         pair<int, int> p = init->getInfo();
         nOutputs = p.second;
-        //cout << "final layer Inputs: " << p.first << " and outputs: " << p.second << endl;
-        //cout << "Check init done" << endl;
     }
     void ForwardProp(vector<double> x){
         if(x.size() != nInputs){
