@@ -50,7 +50,7 @@ public:
     int size() const{
         return bitSize;
     }
-
+    //length of array
     int length() const{
         return pos;
     }
