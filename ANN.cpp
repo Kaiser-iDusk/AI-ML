@@ -46,7 +46,7 @@ class Dense{
         }
         return ans;
     }
-    
+
 public:
     // class initializer
     Dense(int units, string activation){
@@ -63,6 +63,7 @@ public:
     void setVals(int inChannels, int outChannels){
         nInputs = inChannels;
         nOutputs = outChannels;
+        weights = new vector<vector<double>*>(nUnits);
 
         srand(time(0));
         for(int i = 0; i< nUnits; i++){
@@ -76,8 +77,10 @@ public:
 
     // process the input and store it in (*data) 
     void process(){
+        vector<int> ans(nUnits, 0.0);
         for(int i = 0; i< nUnits; i++){
-
+            ans[i] = dot(inputs, weights->at(i)) + bias->at(i);
+            data->at(i) = ans[i];
         }
     }
 };
